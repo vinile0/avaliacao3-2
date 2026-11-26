@@ -1,6 +1,6 @@
 import EDITAIS from "../edital.js";
 
-const MODELO = "claude-sonnet-5-5";
+const MODELO = "gemini-3.5-flash-lite";
 const MAX_QUESTOES = 20;
 const MAX_TOKENS = 8000;
 
@@ -15,52 +15,56 @@ function extrairJson(texto) {
   return JSON.parse(texto.slice(inicio, fim + 1));
 }
 
-async function chamarAnthropic(prompt, maxTokens = MAX_TOKENS) {
-  const chave = process.env.ANTHROPIC_API_KEY;
+async function chamarGemini(prompt, maxOutputTokens = MAX_TOKENS) {
+  const chave = process.env.GEMINI_API_KEY;
   if (!chave) {
-    const erro = new Error("A IA ainda não foi configurada no servidor. Cadastre ANTHROPIC_API_KEY nas variáveis de ambiente da Vercel.");
+    const erro = new Error("A IA ainda não foi configurada no servidor. Cadastre GEMINI_API_KEY nas variáveis de ambiente da Vercel.");
     erro.status = 503;
     throw erro;
   }
 
-  const resposta = await fetch("https://api.anthropic.com/v1/messages", {
+  const resposta = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODELO}:generateContent`, {
     method: "POST",
     headers: {
       "content-type": "application/json",
-      "x-api-key": chave,
-      "anthropic-version": "2023-06-01"
+      "x-goog-api-key": chave
     },
     body: JSON.stringify({
-      model: MODELO,
-      max_tokens: maxTokens,
-      messages: [{ role: "user", content: prompt }]
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      generationConfig: {
+        maxOutputTokens,
+        responseMimeType: "application/json",
+        temperature: 0.7
+      }
     })
   });
 
   const dados = await resposta.json().catch(() => ({}));
   if (!resposta.ok) {
-    if (resposta.status === 401) {
-      const erro = new Error("A chave Anthropic configurada no servidor foi recusada. Confira ANTHROPIC_API_KEY na Vercel.");
+    const mensagem = dados.error?.message || "Confira a chave e as permissões da API Gemini.";
+    if (resposta.status === 400 || resposta.status === 401 || resposta.status === 403) {
+      const erro = new Error(`O Google Gemini recusou a solicitação (${resposta.status}). ${mensagem}`);
       erro.status = 502;
       throw erro;
     }
     if (resposta.status === 429) {
-      const erro = new Error("O limite de uso da API foi atingido. Aguarde um pouco e tente novamente.");
+      const erro = new Error("O limite gratuito de solicitações do Gemini foi atingido. Aguarde a renovação do limite e tente novamente.");
       erro.status = 429;
       throw erro;
     }
-    const detalhe = dados.error && dados.error.message ? ` (${dados.error.message})` : "";
-    const erro = new Error(`A API de IA retornou erro ${resposta.status}${detalhe}`);
+    const erro = new Error(`A API Gemini retornou erro ${resposta.status}. ${mensagem}`);
     erro.status = 502;
     throw erro;
   }
 
-  const texto = (dados.content || [])
-    .filter((bloco) => bloco.type === "text")
-    .map((bloco) => bloco.text)
+  const texto = (dados.candidates?.[0]?.content?.parts || [])
+    .map((parte) => parte.text || "")
     .join("\n");
 
-  if (!texto) throw new Error("A resposta da IA veio vazia. Tente novamente.");
+  if (!texto) {
+    const motivo = dados.candidates?.[0]?.finishReason;
+    throw new Error(motivo ? `O Gemini não conseguiu concluir a resposta (${motivo}). Tente novamente.` : "A resposta do Gemini veio vazia. Tente novamente.");
+  }
   return extrairJson(texto);
 }
 
@@ -183,7 +187,7 @@ export default async function handler(req, res) {
     const materias = obterMaterias(exam);
 
     if (subject === "Redação") {
-      const proposta = await chamarAnthropic(construirPromptRedacao(exam), 3000);
+      const proposta = await chamarGemini(construirPromptRedacao(exam), 3000);
       if (!proposta.tema || !proposta.comando || !Array.isArray(proposta.textosApoio)) {
         throw new Error("A proposta de redação veio incompleta. Tente novamente.");
       }
@@ -200,7 +204,7 @@ export default async function handler(req, res) {
     if (!nivelValido) return enviarErro(res, 400, "Selecione uma dificuldade válida.");
 
     const prompt = construirPromptQuestoes({ exam, subject, topic, level, quantity: Number(quantity) });
-    const resultado = await chamarAnthropic(prompt);
+    const resultado = await chamarGemini(prompt);
     const questoes = validarQuestoes(resultado.questoes, {
       exam,
       subject,

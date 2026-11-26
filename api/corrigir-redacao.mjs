@@ -11,8 +11,8 @@ export default async function handler(req, res) {
     }
     if (texto.length > 12000) return res.status(400).json({ error: "O texto ultrapassou o limite permitido para correção." });
 
-    const chave = process.env.ANTHROPIC_API_KEY;
-    if (!chave) return res.status(503).json({ error: "A IA ainda não foi configurada no servidor. Cadastre ANTHROPIC_API_KEY na Vercel." });
+    const chave = process.env.GEMINI_API_KEY;
+    if (!chave) return res.status(503).json({ error: "A IA ainda não foi configurada no servidor. Cadastre GEMINI_API_KEY na Vercel." });
 
     const regra = exam === "EsPCEx"
       ? "Considere os critérios do edital: tema e estrutura dissertativo-argumentativa; introdução, desenvolvimento e conclusão; tese clara, pelo menos duas ideias-força; gramática da norma culta; coerência, coesão, clareza, concisão, precisão, naturalidade, originalidade e impessoalidade. O edital prevê 25 a 30 linhas."
@@ -28,29 +28,33 @@ export default async function handler(req, res) {
       texto
     ].join("\n\n");
 
-    const resposta = await fetch("https://api.anthropic.com/v1/messages", {
+    const resposta = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent", {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        "x-api-key": chave,
-        "anthropic-version": "2023-06-01"
+        "x-goog-api-key": chave
       },
       body: JSON.stringify({
-        model: "claude-sonnet-5-5",
-        max_tokens: 3500,
-        messages: [{ role: "user", content: prompt }]
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        generationConfig: {
+          maxOutputTokens: 3500,
+          responseMimeType: "application/json",
+          temperature: 0.4
+        }
       })
     });
 
     const dados = await resposta.json().catch(() => ({}));
     if (!resposta.ok) {
-      if (resposta.status === 401) return res.status(502).json({ error: "A chave Anthropic configurada no servidor foi recusada." });
-      if (resposta.status === 429) return res.status(429).json({ error: "O limite de uso da API foi atingido. Aguarde e tente novamente." });
-      const detalhe = dados.error?.message ? ` (${dados.error.message})` : "";
-      return res.status(502).json({ error: `A API de IA retornou erro ${resposta.status}${detalhe}` });
+      if ([400, 401, 403].includes(resposta.status)) {
+        return res.status(502).json({ error: `O Google Gemini recusou a solicitação (${resposta.status}). ${dados.error?.message || "Confira a chave GEMINI_API_KEY."}` });
+      }
+      if (resposta.status === 429) return res.status(429).json({ error: "O limite gratuito de solicitações do Gemini foi atingido. Aguarde e tente novamente." });
+      return res.status(502).json({ error: `A API Gemini retornou erro ${resposta.status}. ${dados.error?.message || ""}` });
     }
 
-    const conteudo = (dados.content || []).filter((bloco) => bloco.type === "text").map((bloco) => bloco.text).join("\n");
+    const conteudo = (dados.candidates?.[0]?.content?.parts || []).map((parte) => parte.text || "").join("\n");
+    if (!conteudo) throw new Error("O Gemini não retornou uma correção. Tente novamente.");
     const inicio = conteudo.indexOf("{");
     const fim = conteudo.lastIndexOf("}");
     if (inicio < 0 || fim < inicio) throw new Error("A IA não retornou uma correção válida.");

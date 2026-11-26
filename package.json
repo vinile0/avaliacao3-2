@@ -1,0 +1,12 @@
+{
+  "name": "questlab-esa-espcex",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plataforma de estudos para ESA Área Geral e EsPCEx com geração de questões por IA.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "vercel dev"
+  }
+}

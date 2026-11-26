@@ -1,84 +1,31 @@
-# QuestLab — ESA e EsPCEx
+# QuestLab — ESA e EsPCEx (versão offline)
 
-Plataforma de treino organizada para:
+Projeto estático de estudos com banco local de questões autorais. Não usa Anthropic, Gemini, API, chave secreta, backend ou serviço pago para gerar listas.
 
-- **ESA — Área Geral**, edital para matrícula em 2027.
-- **EsPCEx — Concurso de Admissão 2026/2027**.
+## Conteúdo incluído
 
-O projeto permite escolher a prova, matéria, assunto do edital, dificuldade e quantidade. A geração por IA ocorre no servidor, com a chave guardada em variável de ambiente. Há também um banco offline com questões autorais fixas.
+- ESA — Área Geral: 20 questões por matéria em Matemática, Português, História do Brasil, Geografia do Brasil e Inglês (100 questões).
+- EsPCEx: 20 questões por matéria em Matemática, Português, Física, Química, História, Geografia e Inglês (140 questões).
+- Total: 240 questões cadastradas por concurso/matéria, com cinco alternativas, gabarito e explicação.
+- Seleção por concurso, matéria, assunto, dificuldade e quantidade; correção automática e impressão.
+- Propostas de redação locais com checklist de revisão, sem correção automática por IA.
 
-## Estrutura
+## Publicação
 
-```text
-questlab-esa-espcex/
-├── api/
-│   ├── gerar.mjs
-│   └── corrigir-redacao.mjs
-├── banco.js
-├── edital.js
-├── gerador.js
-├── gerador-offline.js
-├── index.html
-├── script.js
-├── style.css
-├── package.json
-├── vercel.json
-└── .env.example
-```
+O projeto é estático. Pode ser publicado na Vercel ou no GitHub Pages. Não é necessário cadastrar variáveis de ambiente, API Keys ou configurar funções de servidor.
 
-## Como ativar a IA na publicação
+### Vercel
+1. Envie todos os arquivos desta pasta para a raiz do repositório GitHub.
+2. Na Vercel, importe o repositório.
+3. Framework Preset: Other. Build Command e Output Directory podem ficar vazios/padrão.
+4. Faça Deploy.
 
-**Importante:** este projeto usa funções de servidor (`/api/gerar` e `/api/corrigir-redacao`). Por isso, não basta publicar os arquivos no GitHub Pages. Publique pelo Vercel conectado ao repositório do GitHub.
+### GitHub Pages
+1. Abra Settings do repositório.
+2. Entre em Pages.
+3. Em Build and deployment, escolha Deploy from a branch.
+4. Selecione a branch main e a pasta /(root), depois Save.
 
-1. Crie ou entre em uma conta da Anthropic e gere uma chave de API. O uso da API pode exigir configuração de faturamento na conta da Anthropic.
-2. Coloque os arquivos deste projeto em um repositório GitHub.
-3. Entre em <https://vercel.com/>, importe o repositório e faça o deploy.
-4. No projeto da Vercel, abra **Settings → Environment Variables**.
-5. Crie a variável com o nome `ANTHROPIC_API_KEY` e cole o valor da sua chave como valor. Marque Production (e Preview, se quiser testar prévias).
-6. Salve e faça um novo deploy para aplicar a variável.
-7. Abra o endereço publicado pela Vercel. O botão **Gerar questões com IA** passa a chamar a função no servidor.
+## Observações
 
-O backend usa o identificador `claude-sonnet-5-5` na API da Anthropic.
-
-A chave não deve ser colocada em `index.html`, `script.js`, `gerador.js`, `edital.js`, `banco.js` ou em qualquer arquivo enviado ao GitHub. Não compartilhe sua chave em conversas, prints ou repositórios.
-
-**Atenção aos custos:** se o endereço do site ficar público, qualquer pessoa que o acessar poderá tentar gerar questões e consumir sua cota da API. Para uso pessoal, mantenha o endereço restrito ou adicione autenticação antes de divulgar o link.
-
-## Como executar localmente
-
-É necessário Node.js 20 ou superior e a CLI da Vercel:
-
-```bash
-npm install -g vercel
-```
-
-1. Faça uma cópia de `.env.example` com o nome `.env`.
-2. No arquivo `.env`, substitua o texto de exemplo pela sua chave real.
-3. Abra o terminal na pasta do projeto e execute:
-
-```bash
-vercel dev
-```
-
-Acesse o endereço local informado pela CLI. Abrir `index.html` diretamente com `file://` não executa as funções de servidor e, portanto, não ativa a geração por IA.
-
-## Banco offline
-
-O botão **Treinar com o banco offline** não usa API nem chave. Para Matemática, Física e Química, ele tenta primeiro montar questões automaticamente com números variados; Física e Química só aparecem na EsPCEx, conforme o edital. Nas demais matérias, usa as questões fixas de `banco.js`, por isso o número pode ser menor que o escolhido e alguns assuntos podem não estar cobertos. O banco inclui questões de Inglês para ESA e EsPCEx, mas não substitui a geração por IA.
-
-## Redação
-
-A opção **Redação** gera uma proposta com tema e textos motivadores. Depois, é possível escrever no próprio site e solicitar uma análise pedagógica por IA. A correção é orientativa e não representa nota oficial. Para a EsPCEx, a orientação do edital de referência informa o formato dissertativo-argumentativo em terceira pessoa e 25 a 30 linhas.
-
-## Conteúdo programático
-
-Os tópicos de `edital.js` são resumos organizados a partir dos conteúdos programáticos. Confira sempre o edital completo e eventuais retificações:
-
-- ESA — Edital nº 1/SCA, de 26 de março de 2026: <https://cursounipre.com.br/wp-content/uploads/2026/03/Edital-Concurso-ESA-2026.pdf>
-- EsPCEx — Edital nº 2 S Conc Adms, de 22 de abril de 2026: <https://www.acheconcursos.com.br/imagens/anexo/62392/edital-espcex-2026.pdf>
-
-A ESA está configurada exclusivamente para a Área Geral. As áreas Música e Saúde não estão incluídas nesta versão.
-
-## Aviso sobre uso da IA
-
-As questões são geradas automaticamente e devem ser tratadas como material de treino. Revise cálculos, respostas e explicações e compare o conteúdo com o edital oficial. O modelo pode cometer erros.
+As questões são autorais e voltadas ao treino; não são questões oficiais nem reproduções de provas. Compare sempre os assuntos com o edital e suas retificações. O nível de dificuldade selecionado organiza a prática, mas o banco não usa IA para variar o nível automaticamente. As propostas de redação e o checklist são orientativos, não uma correção oficial.

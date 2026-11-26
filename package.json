@@ -1,0 +1,6 @@
+{
+  "name": "questlab-esa-espcex",
+  "version": "2.0.0",
+  "private": true,
+  "description": "QuestLab offline com banco autoral de questões ESA e EsPCEx; sem dependência de API."
+}

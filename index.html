@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Plataforma de estudos com banco offline de questões autorais para ESA e EsPCEx.">
+  <meta name="theme-color" content="#f4ead5">
+  <title>QuestLab | Estudos para ESA e EsPCEx</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Zilla+Slab:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="edital.js" defer></script>
+  <script src="banco.js" defer></script>
+  <script src="gerador-offline.js" defer></script>
+  
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#inicio" aria-label="QuestLab, início">
+      <span class="brand-mark">Q</span>
+      <span>QuestLab</span>
+    </a>
+    <nav aria-label="Navegação principal">
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#editais">Editais</a>
+      <a href="#gerador">Gerar questões</a>
+    </nav>
+    <a class="header-link" href="#gerador">Começar a estudar</a>
+  </header>
+
+  <main id="inicio">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">PREPARAÇÃO MILITAR • ESA + EsPCEx</p>
+        <h1>Estude pelo edital. Treine com questões novas.</h1>
+        <p>Escolha sua prova e pratique com questões autorais, alternativas, gabarito comentado e assunto identificado em cada enunciado. Tudo funciona diretamente no site, sem chave de API.</p>
+        <div class="hero-actions">
+          <a class="primary-button" href="#gerador">Montar meu treino</a>
+          <a class="text-link" href="#editais">Ver matérias dos editais</a>
+        </div>
+        <p class="hero-note">Banco com 240 questões autorais para prática. Não são questões oficiais; consulte sempre o edital vigente.</p>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="study-card">
+          <div class="study-card-top"><span>QUESTLAB • TREINO</span><span class="live-dot"></span></div>
+          <div class="study-tag">INGLÊS · DIFÍCIL</div>
+          <h2>Verbo to be</h2>
+          <p>Choose the correct alternative to complete the sentence.</p>
+          <div class="fake-option"><b>A</b> They is ready for the mission.</div>
+          <div class="fake-option selected"><b>B</b> They are ready for the mission.</div>
+          <div class="fake-option"><b>C</b> They am ready for the mission.</div>
+          <div class="study-card-foot"><span>Gabarito comentado</span><span>Questão inédita</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="como-funciona">
+      <div class="section-heading">
+        <p class="eyebrow">SIMPLES DE USAR</p>
+        <h2>Do edital ao gabarito em três etapas</h2>
+        <p>Sem precisar digitar o nome da matéria ou inventar um assunto. As opções aparecem conforme a prova escolhida.</p>
+      </div>
+      <ol class="steps">
+        <li>
+          <span class="step-n">1</span>
+          <h3>Escolha a prova</h3>
+          <p>Selecione ESA ou EsPCEx. Para ESA, o conteúdo está configurado para a Área Geral.</p>
+        </li>
+        <li>
+          <span class="step-n">2</span>
+          <h3>Escolha matéria e assunto</h3>
+          <p>Use os botões de matéria e selecione um tópico do edital ou sorteie um assunto.</p>
+        </li>
+        <li>
+          <span class="step-n">3</span>
+          <h3>Resolva e corrija</h3>
+          <p>Marque as alternativas, veja sua pontuação e revise a explicação de cada resposta.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="syllabus-section" id="editais">
+      <div class="section-heading">
+        <p class="eyebrow">CONTEÚDO PROGRAMÁTICO</p>
+        <h2>Preparação direcionada para cada concurso</h2>
+        <p>As matérias são filtradas conforme o concurso. O banco local contém 20 questões por matéria.</p>
+      </div>
+      <div class="syllabus-cards">
+        <article class="syllabus-card">
+          <div class="syllabus-card-head"><span class="exam-mark">ESA</span><span class="syllabus-edition">Matrícula 2027</span></div>
+          <h3>ESA · Área Geral</h3>
+          <p>Matemática, Português, História do Brasil, Geografia do Brasil, Inglês e Redação.</p>
+          <span class="syllabus-note">Edital nº 1/SCA, de 26 de março de 2026.</span>
+        </article>
+        <article class="syllabus-card">
+          <div class="syllabus-card-head"><span class="exam-mark">EsPCEx</span><span class="syllabus-edition">Concurso 2026/27</span></div>
+          <h3>EsPCEx</h3>
+          <p>Matemática, Português, Física, Química, História, Geografia, Inglês e Redação.</p>
+          <span class="syllabus-note">Edital nº 2 S Conc Adms, de 22 de abril de 2026.</span>
+        </article>
+      </div>
+      <p class="syllabus-disclaimer">Observação: a ESA está configurada para a Área Geral. As áreas Música e Saúde possuem conteúdos específicos adicionais que não estão habilitados nesta versão.</p>
+    </section>
+
+    <section class="generator-section" id="gerador">
+      <div class="generator-intro">
+        <p class="eyebrow">SEU TREINO COMEÇA AQUI</p>
+        <h2>Monte uma lista de questões</h2>
+        <p>Escolha as opções abaixo. A matéria será selecionada por botão e os assuntos disponíveis serão atualizados automaticamente conforme o edital.</p>
+        <div class="generator-promise">
+          <span class="promise-icon">✓</span>
+          <span>Gabarito explicado e assunto identificado em cada questão.</span>
+        </div>
+      </div>
+
+      <form class="generator-form" id="practice-form">
+        <div class="form-field">
+          <span class="field-title">1. Concurso</span>
+          <div class="choice-grid exam-choices" id="exam-buttons" role="group" aria-label="Escolha o concurso">
+            <button class="choice-button active" type="button" data-exam="ESA" aria-pressed="true">ESA</button>
+            <button class="choice-button" type="button" data-exam="EsPCEx" aria-pressed="false">EsPCEx</button>
+          </div>
+          <p class="field-hint" id="exam-hint">ESA • Área Geral • Edital 2026, matrícula 2027.</p>
+        </div>
+
+        <div class="form-field">
+          <span class="field-title">2. Matéria</span>
+          <div class="choice-grid subject-choices" id="subject-buttons" role="group" aria-label="Escolha a matéria"></div>
+          <p class="field-hint">Selecione uma matéria ou escolha “Todas as matérias”.</p>
+        </div>
+
+        <div class="form-field" id="topic-field">
+          <label class="field-title" for="topic">3. Assunto do edital</label>
+          <select id="topic" name="topic"></select>
+          <p class="field-hint">“Sortear assunto” seleciona questões variadas do banco e identifica o assunto acima de cada questão. A dificuldade filtra questões classificadas no banco.</p>
+        </div>
+
+        <div class="form-row">
+          <fieldset class="form-field fieldset-reset">
+            <legend class="field-title">4. Dificuldade</legend>
+            <div class="choice-grid difficulty-choices" id="difficulty-buttons" role="group" aria-label="Escolha a dificuldade">
+              <button class="choice-button" type="button" data-level="fácil" aria-pressed="false">Fácil</button>
+              <button class="choice-button" type="button" data-level="média" aria-pressed="false">Média</button>
+              <button class="choice-button active" type="button" data-level="difícil" aria-pressed="false">Difícil</button>
+              <button class="choice-button" type="button" data-level="nível de prova" aria-pressed="true">Nível de prova</button>
+            </div>
+          </fieldset>
+          <label class="form-field" for="quantity">
+            <span class="field-title">5. Quantidade</span>
+            <select id="quantity" name="quantity">
+              <option value="5">5 questões</option>
+              <option value="10" selected>10 questões</option>
+              <option value="15">15 questões</option>
+              <option value="20">20 questões</option>
+            </select>
+          </label>
+        </div>
+
+        <button class="primary-button form-button" type="submit" id="generate-btn">Gerar questões</button>
+        <button class="ghost-button offline-button" type="button" id="offline-btn">Treinar com o banco de questões</button>
+        <p class="form-hint form-center">Banco local: não precisa de internet, chave de API ou assinatura para gerar questões.</p>
+      </form>
+
+      <div class="result-message" id="result" role="status" aria-live="polite" hidden></div>
+    </section>
+
+    <section class="sheet" id="sheet" aria-live="polite" hidden></section>
+  </main>
+
+  <footer>
+    <a class="brand" href="#inicio"><span class="brand-mark">Q</span><span>QuestLab</span></a>
+    <p>Ferramenta de estudo independente. Consulte sempre o edital e as retificações oficiais.</p>
+    <span>© <span id="year"></span> QuestLab</span>
+  </footer>
+</body>
+</html>
